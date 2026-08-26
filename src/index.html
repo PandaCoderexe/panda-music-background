@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self' data:; style-src 'self'; media-src 'self' mediastream:" />
+  <title>Panda Music Background</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <canvas id="bg"></canvas>
+  <canvas id="viz"></canvas>
+
+  <div id="lyrics"><div id="lyrics-stack"></div></div>
+
+  <div id="ui">
+    <div id="brand">🐼 Panda Music Background</div>
+
+    <div id="track">
+      <div id="track-title">Nothing playing</div>
+      <div id="track-meta">Play something on Spotify, Apple Music…</div>
+    </div>
+
+    <div id="controls">
+      <button id="mode-bars" class="mode-btn active" title="Bars mode (1)">▮▮▮ Bars</button>
+      <button id="mode-disk" class="mode-btn" title="Disk mode (2)">◉ Disk</button>
+      <button id="lyrics-btn" title="Lyrics on/off (L)">♪ Lyrics</button>
+      <button id="source-badge" title="Click to change audio source">audio: …</button>
+    </div>
+  </div>
+
+  <script src="js/colors.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/background.js"></script>
+  <script src="js/viz-bars.js"></script>
+  <script src="js/viz-disk.js"></script>
+  <script src="js/renderer.js"></script>
+</body>
+</html>

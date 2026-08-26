@@ -1,0 +1,175 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0a0a10;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  user-select: none;
+}
+
+canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+#bg {
+  filter: blur(70px) saturate(1.25);
+  transform: scale(1.2);
+}
+
+#viz { z-index: 1; }
+
+/* no overflow clipping and no layer promotion here: both paint a subtle
+   rectangle over the blurred background that shows up as edges/tint
+   exactly where the text column ends */
+#lyrics {
+  position: fixed;
+  inset: 0 8vw 32vh;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+#lyrics.visible { opacity: 1; }
+
+/* disk mode: disk slides left, lyrics take the right half (Apple Music style) */
+#lyrics.side {
+  inset: 10vh 7vw 10vh 52vw;
+}
+
+/* full lyric list; scrolled via translateY so the active line is always
+   anchored to the vertical center, however many rows any verse wraps to */
+#lyrics-stack {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: transform 0.6s cubic-bezier(0.22, 0.9, 0.3, 1);
+}
+
+.lyric-line {
+  color: rgba(255, 255, 255, 0.38);
+  font-size: clamp(16px, 2.6vw, 30px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-align: center;
+  line-height: 1.25;
+  /* leave room so even the scaled-up active line never touches the edges */
+  max-width: 84%;
+  margin: 0 auto;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
+  transition: color 0.45s ease, opacity 0.45s ease, text-shadow 0.45s ease;
+  opacity: 0.75;
+}
+
+#lyrics.side .lyric-line {
+  text-align: left;
+  margin: 0; /* hug the left edge next to the disk; free space stays on the right */
+}
+
+.lyric-line.far { opacity: 0.3; }
+
+.lyric-line.hide { opacity: 0; }
+
+/* the active line is emphasized with brightness + glow only — never a
+   scale transform, so passing verses move straight up with no sideways
+   drift */
+.lyric-line.active {
+  color: #fff;
+  opacity: 1;
+  text-shadow: 0 0 26px rgba(255, 255, 255, 0.38), 0 2px 22px rgba(0, 0, 0, 0.65);
+}
+
+#ui {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+#ui.hidden { opacity: 0; }
+
+#brand {
+  position: absolute;
+  top: 18px;
+  left: 22px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+
+#track {
+  position: absolute;
+  left: 22px;
+  bottom: 20px;
+  max-width: 55vw;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
+}
+
+#track-title {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#track-meta {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#controls {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+#controls button {
+  background: rgba(15, 15, 22, 0.55);
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 12.5px;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+#controls button:hover {
+  background: rgba(40, 40, 55, 0.7);
+}
+
+#controls .mode-btn.active,
+#controls #lyrics-btn.active {
+  background: rgba(255, 255, 255, 0.92);
+  color: #111;
+  border-color: transparent;
+  font-weight: 600;
+}
+
+#controls #lyrics-btn.unavailable {
+  opacity: 0.55;
+  font-style: italic;
+}

@@ -1,0 +1,33 @@
+{
+  "name": "panda-music-background",
+  "productName": "Panda Music Background",
+  "version": "1.0.0",
+  "description": "Ambient music visualizer that reacts to whatever is playing on your computer",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^43.0.0"
+  },
+  "build": {
+    "appId": "com.panda.musicbackground",
+    "productName": "Panda Music Background",
+    "files": [
+      "main.js",
+      "preload.js",
+      "nowplaying/**",
+      "src/**"
+    ],
+    "mac": {
+      "category": "public.app-category.music",
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "Used to make the visualizer react to your music."
+      }
+    },
+    "win": {
+      "target": "nsis"
+    }
+  }
+}
